@@ -1,13 +1,20 @@
-from django.urls import path, re_path
+from django.urls import path, re_path, include
+from rest_framework import routers
 
 from . import views
+
 
 urlpatterns = [
     # HHR STORY BLACKLIST PATHS
     path(
-        "hhr_blacklist/",
-        views.BlacklistView.as_view(),
-        name="hhr_blacklist",
+        "hhr_blacklist_show/",
+        views.ShowHarmonyBlacklistView.as_view(),
+        name="hhr_blacklist_show",
+    ),
+    path(
+        "hhr_blacklist_create_or_update/<str:story_id>/",
+        views.CreateOrAddBlacklistFicView.as_view(),
+        name="hhr_blacklist_add_or_modify",
     ),
     # FFN/AO3 STORY, AUTHOR PATHS
     path(

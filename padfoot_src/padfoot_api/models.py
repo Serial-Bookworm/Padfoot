@@ -1,9 +1,11 @@
 from django.db import models
 
 
+WEBSITE_0 = "FFN"
+WEBSITE_1 = "AO3"
 WEBSITE_CHOICES = (
-    ("0", "FFN"),
-    ("1", "AO3"),
+    (WEBSITE_0, "FFN"),
+    (WEBSITE_1, "AO3"),
 )
 
 class HarmonyFicsBlacklist(models.Model):
@@ -12,14 +14,15 @@ class HarmonyFicsBlacklist(models.Model):
     or simply trashy fics that no fan should be subjected to 
     """
 
-    storyid = models.CharField(max_length=30)
+    storyid = models.PositiveBigIntegerField(primary_key=True)
     website = models.CharField(
         choices=WEBSITE_CHOICES,
-        max_length=50,
+        default=WEBSITE_0,
+        max_length=9
     )
-    story_name = models.CharField(max_length=150)
-    author_name = models.CharField(max_length=150)
-    votes = models.PositiveIntegerField(default=0)
+    story_name = models.CharField(max_length=512)
+    author_name = models.CharField(max_length=512)
+    votes = models.PositiveIntegerField(default=1)
     comment = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):

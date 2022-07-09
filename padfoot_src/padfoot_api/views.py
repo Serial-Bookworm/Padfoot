@@ -1,26 +1,22 @@
-from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from .serializers import HarmonyBlacklistFicsSerializer
+from rest_framework.generics import ListAPIView
 
 from .utils.constants import COLS_TO_SEND_BY_HS_API
 
 from .misc import execute_ffn_search_and_response, get_author_details_ao3, get_author_details_ffn, get_story_dates_cleaned_ao3, get_story_details_from_response_ao3
 from .models import HarmonyFicsBlacklist, WEBSITE_CHOICES 
 
-class BlacklistView(APIView):
-    """
-    View to get all blacklisted fics
-    """
 
-    def get(self, request):
-        all_blacklisted_stories = HarmonyFicsBlacklist.objects.all().order_by('-votes')
-
-        response = {"all_stories": all_blacklisted_stories}
-
-        return Response(response)
+class ShowHarmonyBlacklistView(ListAPIView):
+    serializer_class = HarmonyBlacklistFicsSerializer
+    model = serializer_class.Meta.model
+    queryset = model.objects.order_by('-votes')
+    lookup_field = 'storyid'
 
 
-class CreateOrAddBlacklistFic(APIView):
+class CreateOrAddBlacklistFicView(APIView):
     """
     View to create or add votes to a blacklisted fic
     """
@@ -43,7 +39,7 @@ class CreateOrAddBlacklistFic(APIView):
                 return Response({"resp": "404_WRONG_URL"})
         else:
             return Response({"resp": "404_WRONG_URL"})
-
+        print("CHOICE = ", choice)
         story_id = story_id[3:]
         if HarmonyFicsBlacklist.objects.filter(storyid=story_id).exists():
             # story exists, so add a vote
@@ -65,7 +61,7 @@ class CreateOrAddBlacklistFic(APIView):
                 )
             else:
                 # AO3
-                story_all_fields = execute_ffn_search_and_response(story_id)
+                story_all_fields = get_story_details_from_response_ao3(story_id)
                 HarmonyFicsBlacklist.objects.create(
                     storyid=story_id,
                     website=choice[0],

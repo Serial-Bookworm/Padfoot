@@ -166,12 +166,11 @@ def get_story_details_from_reponse_ffn(story_id, response):
     for scraping all story metadata from response text passed from ffn
     """
     ffn_soup = BeautifulSoup(response.content, "html.parser")
-
     try:
         ffn_story_name = ffn_soup.find_all("b", "xcontrast_txt")[0].string.strip()
 
-    except:
-        pass
+    except Exception as e:
+        print("Exception occured: ", e)
 
     ffn_story_id = int(story_id)
 
@@ -461,6 +460,7 @@ def get_response_from_storyId_ffn(story_id):
             os.environ.get("WEAVER_AUTH_PASSWORD"),
         ),
     )
+    print("Got weaver response.")
     return response
 
 
