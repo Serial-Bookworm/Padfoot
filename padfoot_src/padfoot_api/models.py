@@ -8,7 +8,7 @@ WEBSITE_CHOICES = (
     (WEBSITE_1, "AO3"),
 )
 
-class HarmonyFicsBlacklist(models.Model):
+class HarmonyFicsBlacklistModel(models.Model):
     """
     for all dangerous to the heart HHr fics 
     or simply trashy fics that no fan should be subjected to 
