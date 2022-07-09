@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from dotenv import load_dotenv
+import os
 
 load_dotenv()  # take environment variables from .env file.
 
@@ -13,12 +14,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-go5rixiq#9bqcp*=0jfvjagkyh*94(p)p*zj&7!it412m8iez%'
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', os.environ.get("THIRD_IP")]
 
 
 # Application definition
@@ -74,10 +75,6 @@ WSGI_APPLICATION = 'padfoot_src.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "postgres",
@@ -129,3 +126,23 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# LOGGING
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "%(levelname)s %(name)-12s %(asctime)s %(module)s "
+            "%(process)d %(thread)d %(message)s"
+        }
+    },
+    "handlers": {
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        }
+    },
+    "root": {"level": "INFO", "handlers": ["console"]},
+}
