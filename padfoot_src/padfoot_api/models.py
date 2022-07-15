@@ -30,3 +30,20 @@ class HarmonyFicsBlacklistModel(models.Model):
 
     class Meta:
         verbose_name_plural = "Harmony Blacklisted Fics"
+
+
+class Starboard3HModel(models.Model):
+    """
+    for all the starboard messages to keep track of
+    """
+    
+    message_id_orig = models.PositiveBigIntegerField(primary_key=True)
+    channel_id_original = models.PositiveBigIntegerField()
+    author_id = models.PositiveBigIntegerField()
+    message_id_sent = models.PositiveBigIntegerField()
+    
+    def __str__(self):
+        return self.message_id 
+
+    class Meta:
+        verbose_name_plural = "3H Starboard"

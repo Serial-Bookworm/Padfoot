@@ -37,4 +37,10 @@ urlpatterns = [
         views.GetAuthorProfileDetailsAo3.as_view(), 
         name="get_author_profile_ao3"
     ),
+    # starboard 3H
+    path(
+        "starboard3H/",
+        views.StarboardView.as_view(),
+        name="starboard_3H"
+    ),
 ]

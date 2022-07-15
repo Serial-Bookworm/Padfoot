@@ -1,3 +1,4 @@
+from email import message
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import HarmonyBlacklistFicsSerializer
@@ -6,7 +7,7 @@ from rest_framework.generics import ListAPIView
 from .utils.constants import COLS_TO_SEND_BY_HS_API
 
 from .misc import execute_ffn_search_and_response, get_author_details_ao3, get_author_details_ffn, get_story_dates_cleaned_ao3, get_story_details_from_response_ao3
-from .models import HarmonyFicsBlacklistModel, WEBSITE_CHOICES 
+from .models import HarmonyFicsBlacklistModel, WEBSITE_CHOICES, Starboard3HModel 
 
 
 class ShowHarmonyBlacklistView(ListAPIView):
@@ -133,3 +134,31 @@ class GetAuthorProfileDetailsAo3(APIView):
         au_details_crawl = get_author_details_ao3(au_username)
 
         return Response(au_details_crawl)
+
+
+class StarboardView(APIView):
+    """
+    View to add or remove a message from starboard table
+    """
+
+    def get(self, request):
+        response = ""
+        payload = request.data
+        
+        # stars reached count = 2, probably add it to the db table
+        if not Starboard3HModel.objects.filter(message_id_orig = payload["message_id"]).exists():
+            try:
+                Starboard3HModel.objects.create(
+                    message_id_orig = payload["message_id"],
+                    channel_id_original = payload["channel_id_original"],
+                    author_id = payload["author_id"],
+                    message_id_sent = payload["message_sent_id"]
+                )
+                response = "200_STARBOARD_MESSAGE_ADDED"
+            except Exception as e:
+                print("Exception: ", e)
+                response = "500_STARBOARD_ERROR"
+        else:
+            response = "200_MESSAGE_ALREADY_PRESENT"
+    
+        return Response({"resp" : response})
