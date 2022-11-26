@@ -449,7 +449,7 @@ def get_response_from_storyId_ffn(story_id):
     """
     to return response from weaver API for ffn
     """
-    url = f"https://www.fanfiction.net/s/{story_id}"
+    url = f"https://www.fanfiction.net/s/{story_id}/1"
     print(f"Trying url from Weaver API: {url}")
     response = requests.get(
         API_URL_TO_FETCH_STORIES_META_FROM,
